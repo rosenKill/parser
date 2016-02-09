@@ -1,0 +1,15 @@
+smallspring2016G321ËÎÈÑ_ËÐ×åòâåðãSECOND = [*^" file://files/smallspring2016G321ËÎÈÑ_ËÐ×åòâåðãSECOND.scsi "*];; 
+smallspring2016G321ËÎÈÑ_ËÐ×åòâåðãSECOND => nrel_time_situation: ...
+ (*->...(*
+<-time_point;;
+->rrel_number_of_pair:SECOND ;;
+->rrel_day:×åòâåðã;;
+->rrel_week:1 ;;
+;;*);;
+->...(*
+<-time_point;;
+->rrel_number_of_pair:SECOND ;;
+->rrel_day:×åòâåðã;;
+->rrel_week:3 ;;
+;;*);;
+*);;
