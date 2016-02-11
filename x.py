@@ -33,29 +33,30 @@ def writeConturs():
         nameFile = path + nameContur
         # print(nameFile)
         nameFileScs = nameFile + ".scs"
-        nameFileScsI = nameFile + ".scsi"
+        nameFileScsI = nameContur + ".scsi"
         smallNameContur = "small" + nameContur
-        smallNameFileScsI = path + "small" + nameContur + ".scsi"
+        smallNameFileScsI = "small" + nameContur + ".scsi"
         subGroup = predmet.find("numSubgroup").text
         idtfGroup = ""
         if (subGroup == "0"):
-            idtfGroup = currentGroup
+            idtfGroup = "group_"+currentGroup
         elif (subGroup == "1"):
             createNewFile = 1
-            idtfGroup = currentGroup + "_" + "1"
+            idtfGroup = "podgruppa"+currentGroup + "_" + "1"
         else:
             createNewFile = 1
-            idtfGroup = currentGroup + "_" + "2"
+            idtfGroup = "podgruppa"+currentGroup + "_" + "2"
         if not (
         os.path.exists(nameFileScs)):  # else мы дописываем только в мелкий контур а scs и большй контур не трогаем
             weeks = predmet.findall("weekNumber")
             fSCS = open(nameFileScs, "w")
-            fSCS.write(nameContur + ' = [*^" ' + nameFileScsI + '"*];;\n')
+            fSCS.write(nameContur + ' = [*^"file://' + nameFileScsI + '"*];;\n')
             fSCS.write("spring2016->" + nameContur + ";;")
             fSCS.close()
 
-            fSCSI = open(nameFileScsI, "w")
-            fSCSI.write(smallNameContur + ' = [*^" file://' + smallNameFileScsI + ' "*];; \n')
+            fSCSI = open(path+nameFileScsI, "w")
+            fSCSI.write(smallNameContur + ' = [*^"file://' + smallNameFileScsI + '"*];; \n')
+            fSCSI.write(smallNameContur + '<-study_session;; \n')
             fSCSI.write(smallNameContur + " => nrel_time_situation: ...\n (*")
             for week in weeks:
                 fSCSI.write("->...(*\n")
@@ -63,45 +64,47 @@ def writeConturs():
                 fSCSI.write("->rrel_number_of_pair:" + numberPair + " ;;\n")
                 fSCSI.write("->rrel_day:" + engDay[nameDay] + ";;\n")
                 fSCSI.write("->rrel_week:" + week.text + " ;;\n")
-                fSCSI.write(";;*);;\n")
+                fSCSI.write("*);;\n")
 
             fSCSI.write("*);;")
             fSCSI.close()
             #             for small contur
 
-            smallFSCSI = open(smallNameFileScsI, "w")
+            smallFSCSI = open(path+smallNameFileScsI, "w")
             nameSubjectAndType = nameSubject + "_" + typeSubject
             print(nameSubjectAndType)
             rightNameSubject = returnScsIdtf(str(shortNameGroupInt), nameSubjectAndType)
             print(rightNameSubject)
             smallFSCSI.write(rightNameSubject + "=>nrel_teach:" + teachers[teacherId] + "; \n")
-            smallFSCSI.write("<=group" + idtfGroup + ";;\n\n")
+            smallFSCSI.write("<=nrel_learning:" + idtfGroup + ";;\n\n")
             smallFSCSI.close()
 
         else:
             if (createNewFile == 0):
                 print("dopisivaem in small.scsi")
-                smallFSCSI = open(smallNameFileScsI, "a")
+                smallFSCSI = open(path+smallNameFileScsI, "a")
                 nameSubjectAndType = nameSubject + "_" + typeSubject
                 print(nameSubjectAndType)
                 rightNameSubject = returnScsIdtf(str(shortNameGroupInt), nameSubjectAndType)
                 print(rightNameSubject)
                 smallFSCSI.write(rightNameSubject + "=>nrel_teach:" + teachers[teacherId] + "; \n")
-                smallFSCSI.write("<=group" + idtfGroup + ";;\n\n")
+                smallFSCSI.write("<=nrel_learning:" + idtfGroup + ";;\n\n")
                 smallFSCSI.close()
             elif (createNewFile == 1):
                 smallNameContur = "small" + nameContur + idtfGroup
-                smallNameFileScsI = path + smallNameContur + ".scsi"
-                nameFileScsI = nameFile + idtfGroup + ".scsi"
+                smallNameFileScsI = smallNameContur + ".scsi"
+                nameFileScsI = nameContur + idtfGroup + ".scsi"
                 weeks = predmet.findall("weekNumber")
                 nameFileScs = nameFile + idtfGroup + ".scs"
                 fSCS = open(nameFileScs, "w")
-                fSCS.write(nameContur + idtfGroup + ' = [*^" ' + nameFileScsI + '"*];;\n')
+                fSCS.write(nameContur + idtfGroup + ' = [*^"file://' + nameFileScsI + '"*];;\n')
                 fSCS.write("spring2016->" + nameContur + idtfGroup + ";;")
                 fSCS.close()
 
-                fSCSI = open(nameFileScsI, "w")
-                fSCSI.write(smallNameContur + ' = [*^" file://' + smallNameFileScsI + ' "*];; \n')
+                fSCSI = open(path+nameFileScsI, "w")
+                fSCSI.write(smallNameContur + ' = [*^"file://' + smallNameFileScsI + '"*];; \n')
+                fSCSI.write(smallNameContur + '<-study_session;; \n')
+                fSCSI.write(smallNameContur + ' = [*^"file://' + smallNameFileScsI + '"*];; \n')
                 fSCSI.write(smallNameContur + " => nrel_time_situation: ...\n (*")
                 for week in weeks:
                     fSCSI.write("->...(*\n")
@@ -109,27 +112,27 @@ def writeConturs():
                     fSCSI.write("->rrel_number_of_pair:" + numberPair + " ;;\n")
                     fSCSI.write("->rrel_day:" + engDay[nameDay] + ";;\n")
                     fSCSI.write("->rrel_week:" + week.text + " ;;\n")
-                    fSCSI.write(";;*);;\n")
+                    fSCSI.write("*);;\n")
 
                 fSCSI.write("*);;")
                 fSCSI.close()
                 #             for small contur
 
-                smallFSCSI = open(smallNameFileScsI, "w")
+                smallFSCSI = open(path+smallNameFileScsI, "w")
                 nameSubjectAndType = nameSubject + "_" + typeSubject
                 print(nameSubjectAndType)
                 rightNameSubject = returnScsIdtf(str(shortNameGroupInt), nameSubjectAndType)
                 print(rightNameSubject)
                 smallFSCSI.write(rightNameSubject + "=>nrel_teach:" + teachers[teacherId] + "; \n")
-                smallFSCSI.write("<=group" + idtfGroup + ";;\n\n")
+                smallFSCSI.write("<=nrel_learning:" + idtfGroup + ";;\n\n")
                 smallFSCSI.close()
             else:
                 print("c---------------------------------------------")
 
 
 # xml_distant = urllib.request.urlopen('xml.xml')   #http://www.bsuir.by/schedule/rest/schedule/21010
-# groupes = ("321701", "321702", "321703")
-groupes = ("421701", "421702", "421703")
+groupes = ("321701", "321702", "321703")
+# groupes = ("421701", "421702", "421703")
 teachers = {"504529": "Parkalov_Alexey_Viktorovich",
             "502183": "shunkevich_d_v",
             "504551": "rusetski_k_v",
@@ -163,12 +166,12 @@ engNameTypeSubject = {"ЛР": "",
                       "ПЗ": "",
                       "ЛК": "",
                       }
-engDay = {"Понедельник": "Monday",
-          "Вторник": "Tuesday",
-          "Среда": "Wednesday",
-          "Четверг": "Thursday",
-          "Пятница": "Friday",
-          "Суббота": "Saturday",
+engDay = {"Понедельник": "monday",
+          "Вторник": "tuesday",
+          "Среда": "wednesday",
+          "Четверг": "thursday",
+          "Пятница": "friday",
+          "Суббота": "saturday",
           }
 groupesCode = {"321701": "21010", "321702": "21079", "321703": "21080", "421701": "21139", "421702": "21207",
                "421703": "21208"}
